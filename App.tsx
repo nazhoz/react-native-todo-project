@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View, Image } from 'react-native';
+import React, { useState,useEffect } from 'react';
+import { KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View, Image, ScrollView } from 'react-native';
 import Tasks from './components/Tasks';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
@@ -9,27 +10,55 @@ const App = () => {
   const [task, setTask] = useState('');
   const [taskItems, setTaskItems] = useState <string[]> ([]);
 
+  useEffect(() => {
+    _retrieveData();
+  }, []);
+
+  // const handleAddTask = () => {
+  //   if (task.trim() !== '') {
+  //     setTaskItems([...taskItems, task]);
+  //     setTask('');
+  //   }
+  // };
   const handleAddTask = () => {
     if (task.trim() !== '') {
-      setTaskItems([...taskItems, task]);
+      const updatedTasks = [...taskItems, task];
+      setTaskItems(updatedTasks);
       setTask('');
+      _storeData(updatedTasks);
     }
   };
 
-  // const handleDeleteTask = (index : number) => {
-  //   const updatedTasks = taskItems.filter((_, i) => i !== index);
-  //   setTaskItems(updatedTasks);
-  // };
+
   const handleDeleteTask = (index: number) => {
     if (index < 0 || index >= taskItems.length) {
       return;
-    }
-  
+    }  
     const updatedTasks = [...taskItems];
-  
     updatedTasks.splice(index, 1);
-  
     setTaskItems(updatedTasks);
+    _storeData(updatedTasks);
+  };
+
+
+  const _storeData = async (tasks: string[]) => {
+    try {
+      await AsyncStorage.setItem('@MyTasks:key', JSON.stringify(tasks));
+    } catch (error) {
+      // Handle error
+    }
+  };
+
+  const _retrieveData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('@MyTasks:key');
+      if (value !== null) {
+        const savedTasks = JSON.parse(value);
+        setTaskItems(savedTasks);
+      }
+    } catch (error) {
+      // Handle error
+    }
   };
   
 
@@ -55,7 +84,7 @@ const App = () => {
 
       {/* Write a task */}
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'android' ? 'padding' : 'height'}
+        behavior={Platform.OS === 'android' ? 'height' : 'padding'}
         style={styles.writeTaskWrapper}
       >
         <TextInput
@@ -80,6 +109,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#E8EAED',
   },
+  // scrollViewContainer:{
+  //   flexGrow: 1,
+  // },
   taskWrapper: {
     paddingTop: 60,
     paddingHorizontal: 20,

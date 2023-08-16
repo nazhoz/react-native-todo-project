@@ -5,7 +5,8 @@ const Tasks = (props) => {
   return (
     <View style={styles.item}>
       <View style={styles.itemleft}>
-        <View style={styles.square}></View>
+        {/* <View style={styles.square}></View> */}
+        <Image style={styles.square} source={require('../images/checklist.png')}></Image>
         <Text style={styles.itemtext}>{props.text}</Text>
       </View>
       <TouchableOpacity onPress={props.onDelete}>
@@ -39,10 +40,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   square: {
-    width: 24,
-    height: 24,
-    backgroundColor: '#55BCF6',
-    opacity: 0.4,
+    opacity: 0.2,
     borderRadius: 5,
     marginRight: 15,
   },
