@@ -64,6 +64,7 @@ const Home = () => {
         <Text style={styles.sectionTitle}>Today's Tasks</Text>
         <Image source={require('../images/todo.png')} style={styles.todoimage}></Image>
         </View>
+        <ScrollView>
         <View style={styles.items}>
           {/* This is where the tasks will go! */}
           {taskItems.map((taskItem, index) => (
@@ -74,6 +75,7 @@ const Home = () => {
             />
           ))}
         </View>
+        </ScrollView>
       </View>
 
       {/* Write a task */}
@@ -102,6 +104,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#E8EAED',
+
   },
   // scrollViewContainer:{
   //   flexGrow: 1,
@@ -116,7 +119,6 @@ const styles = StyleSheet.create({
     alignItems:'center',
     // backgroundColor:'yellow',
     height:50,
-    
   },
   todoimage:{
     width:30,
